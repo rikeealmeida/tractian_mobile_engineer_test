@@ -18,6 +18,7 @@ class _AssetsPageState extends State<AssetsPage> {
   @override
   void initState() {
     controller = AssetsController();
+    controller.searchController = TextEditingController();
     controller.getAssets(widget.unitId);
     super.initState();
   }
@@ -39,8 +40,10 @@ class _AssetsPageState extends State<AssetsPage> {
                 color: Colors.grey[300],
                 borderRadius: BorderRadius.circular(5),
               ),
-              child: const TextField(
-                decoration: InputDecoration(
+              child: TextField(
+                controller: controller.searchController,
+                onChanged: controller.onSearchChanged,
+                decoration: const InputDecoration(
                   hintText: "Buscar Ativo ou Local",
                   hintStyle: TextStyle(color: Colors.grey),
                   contentPadding: EdgeInsets.zero,
@@ -51,57 +54,84 @@ class _AssetsPageState extends State<AssetsPage> {
                 ),
               ),
             ),
-            Row(
-              children: [
-                InkWell(
-                  onTap: () => controller.filterAssets("motor rt coal af01"),
-                  child: Container(
-                    margin: const EdgeInsets.symmetric(vertical: 5),
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(3),
-                      color: buttonColor,
-                    ),
-                    child: const Row(
-                      children: [
-                        Icon(Icons.bolt_outlined,
-                            size: 20, color: Colors.white),
-                        SizedBox(width: 5),
-                        Text(
-                          "Sensor de Energia",
-                          style: TextStyle(color: Colors.white),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Container(
-                  margin: const EdgeInsets.symmetric(vertical: 5),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(3),
-                    color: buttonColor,
-                  ),
-                  child: const Row(
-                    children: [
-                      Icon(Icons.error_outline, size: 20, color: Colors.white),
-                      SizedBox(width: 5),
-                      Text(
-                        "Crítico",
-                        style: TextStyle(color: Colors.white),
-                      )
-                    ],
-                  ),
-                ),
-              ],
+            const SizedBox(height: 10),
+            SizedBox(
+              height: 50,
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                children: [
+                  ValueListenableBuilder(
+                      valueListenable: controller.isFilteredByEnergy,
+                      builder: (context, v, child) {
+                        return InkWell(
+                            onTap: () =>
+                                controller.togleFilter(FilterType.energy),
+                            child: Container(
+                              margin: const EdgeInsets.symmetric(vertical: 5),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 5),
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                    color:
+                                        v ? Colors.transparent : Colors.grey),
+                                borderRadius: BorderRadius.circular(3),
+                                color: v ? buttonColor : Colors.transparent,
+                              ),
+                              child: Row(
+                                children: [
+                                  Icon(Icons.bolt_outlined,
+                                      size: 20,
+                                      color: v ? Colors.white : Colors.grey),
+                                  const SizedBox(width: 5),
+                                  Text(
+                                    "Sensor de Energia",
+                                    style: TextStyle(
+                                        color: v ? Colors.white : Colors.grey),
+                                  )
+                                ],
+                              ),
+                            ));
+                      }),
+                  const SizedBox(width: 10),
+                  ValueListenableBuilder(
+                      valueListenable: controller.isFilteredByCritical,
+                      builder: (context, v, contr) {
+                        return InkWell(
+                          onTap: () =>
+                              controller.togleFilter(FilterType.critical),
+                          child: Container(
+                            margin: const EdgeInsets.symmetric(vertical: 5),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 5),
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                  color: v ? Colors.transparent : Colors.grey),
+                              borderRadius: BorderRadius.circular(3),
+                              color: v ? buttonColor : Colors.transparent,
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(Icons.error_outline,
+                                    size: 20,
+                                    color: v ? Colors.white : Colors.grey),
+                                SizedBox(width: 5),
+                                Text(
+                                  "Crítico",
+                                  style: TextStyle(
+                                      color: v ? Colors.white : Colors.grey),
+                                )
+                              ],
+                            ),
+                          ),
+                        );
+                      }),
+                ],
+              ),
             ),
             Expanded(
               child: ListenableBuilder(
-                  listenable: (controller),
-                  builder: (context, index) {
+                  listenable: controller,
+                  builder: (context, value) {
                     if (controller.isLoading) {
                       return const Center(child: CircularProgressIndicator());
                     } else if (controller.isEmpty) {
@@ -110,41 +140,30 @@ class _AssetsPageState extends State<AssetsPage> {
                     } else if (controller.haveError) {
                       return Center(child: Text(controller.errorMsg));
                     } else {
-                      if (controller.isFiltered) {
-                        return ListView.builder(
-                          padding: const EdgeInsets.symmetric(vertical: 5),
-                          itemCount: controller.filteredAssets.length,
-                          itemBuilder: (context, index) {
-                            var node = controller.assets[index];
-                            if (node['parentId'] == null &&
-                                node['locationId'] == null &&
-                                node['sensorType'] == null) {
-                              node['type'] = NodeType.location;
-                            } else {
-                              node['type'] = NodeType.component;
-                            }
-                            node['nivel'] = 0;
-                            return NodeWidget(node: node);
-                          },
-                        );
-                      } else {
-                        return ListView.builder(
-                          padding: const EdgeInsets.symmetric(vertical: 5),
-                          itemCount: controller.assets.length,
-                          itemBuilder: (context, index) {
-                            var node = controller.assets[index];
-                            if (node['parentId'] == null &&
-                                node['locationId'] == null &&
-                                node['sensorType'] == null) {
-                              node['type'] = NodeType.location;
-                            } else {
-                              node['type'] = NodeType.component;
-                            }
-                            node['nivel'] = 0;
-                            return NodeWidget(node: node);
-                          },
-                        );
-                      }
+                      return ListView.builder(
+                        padding: const EdgeInsets.symmetric(vertical: 5),
+                        itemCount: (controller.isFilteredByQuery.value ||
+                                controller.isFilteredByCritical.value ||
+                                controller.isFilteredByEnergy.value)
+                            ? controller.filteredAssets.length
+                            : controller.assets.length,
+                        itemBuilder: (context, index) {
+                          var node = (controller.isFilteredByQuery.value ||
+                                  controller.isFilteredByCritical.value ||
+                                  controller.isFilteredByEnergy.value)
+                              ? controller.filteredAssets[index]
+                              : controller.assets[index];
+                          if (node['parentId'] == null &&
+                              node['locationId'] == null &&
+                              node['sensorType'] == null) {
+                            node['type'] = NodeType.location;
+                          } else {
+                            node['type'] = NodeType.component;
+                          }
+                          node['nivel'] = 0;
+                          return NodeWidget(node: node);
+                        },
+                      );
                     }
                   }),
             )

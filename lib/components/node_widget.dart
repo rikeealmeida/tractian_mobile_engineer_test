@@ -12,6 +12,7 @@ class NodeWidget extends StatefulWidget {
 
 class _NodeWidgetState extends State<NodeWidget> {
   var isExpanded = false;
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -70,11 +71,16 @@ class _NodeWidgetState extends State<NodeWidget> {
             ),
           ),
           if (isExpanded && widget.node['children'].isNotEmpty)
-            Column(
-              children: widget.node['children'].map<Widget>((e) {
-                e['nivel'] = widget.node['nivel'] + 1;
-                return NodeWidget(node: e);
-              }).toList(),
+            ListView.builder(
+              padding: EdgeInsets.zero,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: widget.node['children'].length,
+              itemBuilder: (context, index) {
+                var childNode = widget.node['children'][index];
+                childNode['nivel'] = widget.node['nivel'] + 1;
+                return NodeWidget(node: childNode);
+              },
             ),
         ],
       ),
