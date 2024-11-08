@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tractian_mobile_engineer_test/models/company_asset_model.dart';
 
 class NodeWidget extends StatefulWidget {
-  final CompanyAssetModel node;
+  final Map<String, dynamic> node;
 
   const NodeWidget({super.key, required this.node});
 
@@ -15,26 +15,28 @@ class _NodeWidgetState extends State<NodeWidget> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 1, vertical: 5),
+      padding: const EdgeInsets.symmetric(horizontal: 1, vertical: 5),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           InkWell(
-            onTap: widget.node.children.isEmpty
+            onTap: widget.node['children'].isEmpty
                 ? () {
-                    print(widget.node.toJson());
+                    // print(widget.node);
                   }
                 : () {
-                    print(widget.node.toJson());
+                    // print(widget.node);
                     setState(() {
                       isExpanded = !isExpanded;
                     });
                   },
             child: Row(
               children: [
-                if (widget.node.parentId != null ||
-                    widget.node.locationId != null) ...[SizedBox(width: 20)],
-                if (widget.node.children.isNotEmpty)
+                SizedBox(
+                    width: widget.node['nivel'] == 0
+                        ? 0
+                        : widget.node['nivel'] * 15.0),
+                if (widget.node['children'].isNotEmpty)
                   Icon(
                     isExpanded ? Icons.expand_more : Icons.chevron_right,
                     size: 20,
@@ -42,35 +44,50 @@ class _NodeWidgetState extends State<NodeWidget> {
                 else
                   const SizedBox(width: 20),
                 Image.asset(getNodeIcon(widget.node), width: 20),
-                SizedBox(width: 5),
-                Expanded(
-                  child: Text(
-                    widget.node.name,
-                    style: const TextStyle(fontSize: 14),
-                  ),
+                const SizedBox(width: 5),
+                Text(
+                  widget.node['name'],
+                  style: const TextStyle(fontSize: 14),
                 ),
+                const SizedBox(width: 5),
+                if (widget.node['status'] != null) ...[
+                  if (widget.node['status'] == 'operating') ...[
+                   const Icon(Icons.bolt_outlined, color: Colors.green, size: 18)
+                  ] else if (widget.node['status'] == 'alert') ...[
+                    Container(
+                      width: 8,
+                      height: 8,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(50),
+                          color: Colors.red),
+                    )
+                  ] else ...[
+                    const SizedBox()
+                  ]
+                ],
                 //colocar indicadores aqui
               ],
             ),
           ),
-          if (isExpanded && widget.node.children.isNotEmpty)
+          if (isExpanded && widget.node['children'].isNotEmpty)
             Column(
-                children: widget.node.children
-                    .map((e) => NodeWidget(node: e))
-                    .toList()),
+              children: widget.node['children'].map<Widget>((e) {
+                e['nivel'] = widget.node['nivel'] + 1;
+                return NodeWidget(node: e);
+              }).toList(),
+            ),
         ],
       ),
     );
   }
 }
 
-String getNodeIcon(CompanyAssetModel node) {
-  if (node.parentId == null ||
-      (node.parentId != null && node.children.isNotEmpty)) {
+String getNodeIcon(Map<String, dynamic> node) {
+  if (node['type'] == NodeType.location) {
     return 'assets/images/location.png';
-  } else if (node.children.isNotEmpty && node.locationId != null) {
-    return 'assets/images/component.png';
-  } else {
+  } else if (node['children'].isNotEmpty) {
     return 'assets/images/asset.png';
+  } else {
+    return 'assets/images/component.png';
   }
 }

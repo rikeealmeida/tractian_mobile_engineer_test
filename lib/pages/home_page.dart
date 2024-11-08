@@ -54,14 +54,14 @@ class _HomePageState extends State<HomePage> {
                   return Container(
                     margin: const EdgeInsets.symmetric(vertical: 20),
                     decoration: BoxDecoration(
-                        color: unityColor,
+                        color: buttonColor,
                         borderRadius: BorderRadius.circular(5)),
                     child: ListTile(
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => AssetsPage(unitId: unit.id)));
                       },
-                      contentPadding: EdgeInsets.all(15),
+                      contentPadding: const EdgeInsets.all(15),
                       title: Row(
                         children: [
                           Image.asset(

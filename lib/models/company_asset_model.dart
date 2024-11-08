@@ -1,6 +1,14 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+enum NodeType {
+  location,
+  subLocation,
+  asset,
+  subAsset,
+  component,
+}
+
 class CompanyAssetModel {
   String id;
   String name;
@@ -11,9 +19,12 @@ class CompanyAssetModel {
   String? sensorType;
   String? status;
   List<CompanyAssetModel> children = [];
+  NodeType? type;
+
   CompanyAssetModel({
     required this.id,
     required this.name,
+    this.type,
     this.parentId,
     this.gatewayId,
     this.locationId,
@@ -32,6 +43,7 @@ class CompanyAssetModel {
       'sensorId': sensorId,
       'sensorType': sensorType,
       'status': status,
+      'children': children.map((child) => child.toMap()).toList(),
     };
   }
 
