@@ -1,27 +1,26 @@
-# Melhorias para o Projeto Tractian Mobile Engineer Test
+# Tractian Mobile Engineer Test Project
 
-## Introdução
+## App Demonstration
+https://github.com/user-attachments/assets/7587071a-2932-4230-85eb-2ebb4682bf67
 
-Este documento destaca alguns pontos que podem ser melhorados no projeto.
+## This section of the document highlights some points that can be improved in the project.
 
-## Pontos de Melhoria
+### 1. Code Structure
 
-### 1. Estrutura do Código
-
-- **Reorganizar as pastas para seguir as melhores práticas do Flutter, como separar widgets, modelos, serviços, etc.**
+- **Reorganize folders to follow Flutter best practices, such as separating widgets, templates, services, etc.**
 
 ### 2. UI/UX
 
-- **Garantir que todos os componentes da interface sigam um design consistente.**
+- **Ensure all interface components follow a consistent design.**
 
-### 3. Componentização
+### 3. Componentization
 
-- **Criar componentes que possam ser reutilizaveis no código.**
+- **Create components that can be reusable in code.**
 
-### 4. Documentação
+### 4. Documentation
 
-- **Adicionar comentários explicativos no código para facilitar a compreensão.**
+- **Add explanatory comments to the code to make it easier to understand.**
 
-### 5. Gerenciamento de Estado
+### 5. State Management
 
-- **Considerar o uso de pacotes como GetX ou Mobx para um gerenciamento de estado mais eficiente.**
+- **Consider using packages like GetX or Mobx for more efficient state management.**
