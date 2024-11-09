@@ -125,7 +125,6 @@ class AssetsController extends ChangeNotifier {
         isFilteredByCritical.value = false;
         isFilteredByEnergy.value = false;
     }
-
     notifyListeners();
   }
 
