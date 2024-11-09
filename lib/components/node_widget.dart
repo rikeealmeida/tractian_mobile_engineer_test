@@ -22,11 +22,8 @@ class _NodeWidgetState extends State<NodeWidget> {
         children: [
           InkWell(
             onTap: widget.node['children'].isEmpty
-                ? () {
-                    // print(widget.node);
-                  }
+                ? null
                 : () {
-                    // print(widget.node);
                     setState(() {
                       isExpanded = !isExpanded;
                     });
@@ -53,7 +50,8 @@ class _NodeWidgetState extends State<NodeWidget> {
                 const SizedBox(width: 5),
                 if (widget.node['status'] != null) ...[
                   if (widget.node['status'] == 'operating') ...[
-                   const Icon(Icons.bolt_outlined, color: Colors.green, size: 18)
+                    const Icon(Icons.bolt_outlined,
+                        color: Colors.green, size: 18)
                   ] else if (widget.node['status'] == 'alert') ...[
                     Container(
                       width: 8,
@@ -66,7 +64,6 @@ class _NodeWidgetState extends State<NodeWidget> {
                     const SizedBox()
                   ]
                 ],
-                //colocar indicadores aqui
               ],
             ),
           ),

@@ -50,7 +50,7 @@ class AssetsController extends ChangeNotifier {
   }
 
   List<Map<String, dynamic>> buildTree(List<CompanyAssetModel> assets) {
-    Map<String, CompanyAssetModel> nodes = {}; // Todos os nós
+    Map<String, CompanyAssetModel> nodes = {};
     Map<String, List<String>> adjacencyList = {};
 
     for (var item in assets) {
