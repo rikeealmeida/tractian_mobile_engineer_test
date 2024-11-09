@@ -1,16 +1,27 @@
-# tractian_mobile_engineer_test
+# Melhorias para o Projeto Tractian Mobile Engineer Test
 
-A new Flutter project.
+## Introdução
 
-## Getting Started
+Este documento destaca alguns pontos que podem ser melhorados no projeto.
 
-This project is a starting point for a Flutter application.
+## Pontos de Melhoria
 
-A few resources to get you started if this is your first Flutter project:
+### 1. Estrutura do Código
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- **Reorganizar as pastas para seguir as melhores práticas do Flutter, como separar widgets, modelos, serviços, etc.**
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### 2. UI/UX
+
+- **Garantir que todos os componentes da interface sigam um design consistente.**
+
+### 3. Componentização
+
+- **Criar componentes que possam ser reutilizaveis no código.**
+
+### 4. Documentação
+
+- **Adicionar comentários explicativos no código para facilitar a compreensão.**
+
+### 5. Gerenciamento de Estado
+
+- **Considerar o uso de pacotes como GetX ou Mobx para um gerenciamento de estado mais eficiente.**
